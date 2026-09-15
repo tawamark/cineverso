@@ -57,7 +57,7 @@ npm run setup
 Depois, também a partir da raiz, inicie todo o ambiente de desenvolvimento:
 
 ```bash
-npm run dev
+npm run local
 ```
 
 Esse comando inicia o PostgreSQL, o backend e o frontend, além de abrir automaticamente `http://localhost:3000` no navegador. O frontend e o backend ficam em modo de desenvolvimento, atualizando automaticamente quando os arquivos forem alterados.
@@ -65,7 +65,7 @@ Esse comando inicia o PostgreSQL, o backend e o frontend, além de abrir automat
 Para encerrar os servidores, pressione `Ctrl+C`. Para também parar o PostgreSQL, execute:
 
 ```bash
-npm run dev:stop
+npm run local:stop
 ```
 
 ### Execução separada

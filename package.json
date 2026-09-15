@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "setup": "cd frontend && npm install && cd ../backend && npm install && npm run prisma:generate",
-    "dev": "docker compose up -d && concurrently --kill-others-on-fail --names BACKEND,FRONTEND,BROWSER --prefix-colors blue,magenta,green \"cd backend && npm run start:dev\" \"cd frontend && npm run dev\" \"wait-on http://localhost:3000 && open-cli http://localhost:3000\"",
-    "dev:stop": "docker compose down",
+    "local": "docker compose up -d && concurrently --kill-others-on-fail --names BACKEND,FRONTEND,BROWSER --prefix-colors blue,magenta,green \"cd backend && npm run start:dev\" \"cd frontend && npm run dev\" \"wait-on http://localhost:3000 && open-cli http://localhost:3000\"",
+    "local:stop": "docker compose down",
     "build": "cd frontend && npm run build && cd ../backend && npm run build",
     "lint": "cd frontend && npm run lint && cd ../backend && npm run lint",
     "test": "cd backend && npm test"
