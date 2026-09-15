@@ -47,35 +47,40 @@ cineverso/
 
 ## Como executar
 
-### Banco de dados
-
-Com Docker instalado, inicie o PostgreSQL:
+Na primeira execução, instale todas as dependências a partir da raiz do projeto:
 
 ```bash
-docker compose up -d
+npm install
+npm run setup
 ```
 
-### Backend
+Depois, também a partir da raiz, inicie todo o ambiente de desenvolvimento:
 
 ```bash
-cd backend
-npm install
-cp .env.example .env
-npm run prisma:generate
-npm run start:dev
-```
-
-O backend será iniciado em `http://localhost:3001`.
-
-### Frontend
-
-```bash
-cd frontend
-npm install
 npm run dev
 ```
 
-O frontend será iniciado em `http://localhost:3000`.
+Esse comando inicia o PostgreSQL, o backend e o frontend, além de abrir automaticamente `http://localhost:3000` no navegador. O frontend e o backend ficam em modo de desenvolvimento, atualizando automaticamente quando os arquivos forem alterados.
+
+Para encerrar os servidores, pressione `Ctrl+C`. Para também parar o PostgreSQL, execute:
+
+```bash
+npm run dev:stop
+```
+
+### Execução separada
+
+Se necessário, cada parte também pode ser iniciada separadamente:
+
+```bash
+cd frontend
+npm run dev
+```
+
+```bash
+cd backend
+npm run start:dev
+```
 
 ## Aplicação online
 
