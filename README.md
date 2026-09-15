@@ -34,6 +34,18 @@ O sistema terá como principais funcionalidades:
 - **Gerenciador de pacotes:** npm
 - **Ambiente local:** Docker Compose
 
+## Identidade visual
+
+A interface utiliza a seguinte paleta principal:
+
+| Uso | Cor |
+| --- | --- |
+| Fundo | `#10151b` |
+| Ações e botões | `#1d63ed` |
+| Textos | `#ffffff` |
+
+No frontend, essas cores estão disponíveis no Tailwind CSS como `background`, `primary` e `foreground`.
+
 ## Estrutura do projeto
 
 ```text
