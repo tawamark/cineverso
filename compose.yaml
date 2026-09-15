@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: cineverso-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cineverso
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usuario -d cineverso"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

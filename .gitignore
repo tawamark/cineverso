@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build output
+.next/
+out/
+dist/
+build/
+coverage/
+
+# Generated Prisma client
+backend/src/generated/prisma/
+
+# Optional tool metadata generated locally
+backend/.agents/
+backend/.claude/
+backend/.windsurf/
+backend/skills-lock.json
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+*.tmp
+*.temp
+*.tsbuildinfo
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

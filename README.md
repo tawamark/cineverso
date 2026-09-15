@@ -25,7 +25,12 @@ O sistema terá como principais funcionalidades:
 
 ## Tecnologias
 
-As tecnologias utilizadas no projeto serão adicionadas conforme o desenvolvimento.
+- Next.js com TypeScript
+- NestJS com TypeScript
+- Prisma ORM
+- PostgreSQL
+- Tailwind CSS
+- npm
 
 ## Estrutura do projeto
 
@@ -35,12 +40,42 @@ O projeto será dividido em frontend e backend.
 cineverso/
 ├── frontend/
 ├── backend/
+├── compose.yaml
+├── .gitignore
 └── README.md
 ```
 
 ## Como executar
 
-As instruções para instalação e execução do projeto serão adicionadas durante o desenvolvimento.
+### Banco de dados
+
+Com Docker instalado, inicie o PostgreSQL:
+
+```bash
+docker compose up -d
+```
+
+### Backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+npm run prisma:generate
+npm run start:dev
+```
+
+O backend será iniciado em `http://localhost:3001`.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+O frontend será iniciado em `http://localhost:3000`.
 
 ## Aplicação online
 
