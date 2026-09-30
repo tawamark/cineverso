@@ -4,7 +4,7 @@ O CineVerso é um sistema web desenvolvido para a disciplina de Programação IV
 
 A ideia do projeto é criar uma aplicação para venda de ingressos e gerenciamento de um cinema, permitindo cadastrar filmes, salas, sessões e controlar os ingressos vendidos.
 
-> **Status:** ambiente inicial configurado. As funcionalidades do produto ainda não foram implementadas.
+> **Status:** backend do MVP implementado; a interface do totem ainda não está integrada.
 
 ## Integrantes
 
@@ -88,6 +88,9 @@ O comando `setup` também gera o Prisma Client. O arquivo local `backend/.env` d
 ```env
 DATABASE_URL="postgresql://usuario:senha@localhost:5432/cineverso"
 PORT=3001
+ADMIN_EMAIL="admin@cineverso.local"
+ADMIN_PASSWORD="troque-esta-senha-antes-de-usar"
+TEST_DATABASE_URL="postgresql://usuario:senha@localhost:5433/cineverso_mvp_test"
 ```
 
 O arquivo `.env` não é enviado ao Git.
@@ -139,11 +142,12 @@ Execute os comandos abaixo na raiz do projeto:
 | `npm run local:stop` | Para o PostgreSQL local |
 | `npm run lint` | Executa o lint do frontend e backend |
 | `npm run build` | Gera o build do frontend e backend |
-| `npm test` | Executa os testes do backend |
+| `npm test` | Executa os testes unitários do backend |
+| `npm run test:e2e` | Aplica as migrations e testa a API em banco separado |
 
 ## Banco de dados
 
-O Prisma está configurado para PostgreSQL, mas o schema ainda não possui entidades. A modelagem do banco e as migrations serão realizadas em uma próxima etapa.
+O schema Prisma e as migrations incluem cinemas, salas e assentos, filmes, sessões, tipos de ingresso, compras e ingressos. Depois de configurar `backend/.env`, execute `npm run db:migrate` na pasta `backend`. A [documentação da API](backend/README.md) descreve rotas, autenticação administrativa e testes com banco separado.
 
 ## Aplicação online
 
