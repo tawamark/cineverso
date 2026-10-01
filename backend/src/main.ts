@@ -9,7 +9,15 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.useBodyParser('json', { limit: '3mb' });
-  app.enableCors();
+  const configuredOrigins = configService
+    .get<string>('CORS_ORIGINS', '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  app.enableCors({
+    origin: configuredOrigins.length ? configuredOrigins : true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

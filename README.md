@@ -150,6 +150,7 @@ O schema Prisma e as migrations incluem cinemas, salas e assentos, filmes, sess√
 
 - [Vis√£o funcional do MVP](docs/mvp.md)
 - [Arquitetura e fluxos](docs/architecture.md)
+- [Deploy](docs/deployment.md)
 - [Paleta de cores](docs/color-palette.md)
 - [API do backend](backend/README.md)
 

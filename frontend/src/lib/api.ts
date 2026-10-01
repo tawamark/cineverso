@@ -1,7 +1,36 @@
 import type { Movie } from "@/types/catalog";
 import { withProgress } from "./progress";
 
-const trackedFetch: typeof fetch = (...args) => withProgress(() => fetch(...args));
+const retryableStatuses = new Set([502, 503, 504]);
+
+async function waitBeforeRetry(signal?: AbortSignal) {
+  await new Promise<void>((resolve, reject) => {
+    const timeout = window.setTimeout(resolve, 5_000);
+    signal?.addEventListener("abort", () => {
+      window.clearTimeout(timeout);
+      reject(signal.reason);
+    }, { once: true });
+  });
+}
+
+const trackedFetch: typeof fetch = (...args) => withProgress(async () => {
+  const [, init] = args;
+  const canRetry = !init?.method || init.method.toUpperCase() === "GET";
+  const attempts = canRetry ? 6 : 1;
+
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      const response = await fetch(...args);
+      if (!retryableStatuses.has(response.status) || attempt === attempts - 1) return response;
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") throw error;
+      if (attempt === attempts - 1) throw error;
+    }
+    await waitBeforeRetry(init?.signal ?? undefined);
+  }
+
+  throw new Error("Não foi possível conectar ao servidor.");
+});
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??

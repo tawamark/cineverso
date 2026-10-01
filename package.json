@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "O CineVerso é um sistema web desenvolvido para a disciplina de Programação IV.",
   "private": true,
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "setup": "cd frontend && npm install && cd ../backend && npm install && npm run prisma:generate",
     "local": "docker compose up -d --wait && npm --prefix backend run db:migrate && concurrently --kill-others-on-fail --names BACKEND,FRONTEND,BROWSER --prefix-colors blue,magenta,green \"cd backend && npm run start:dev\" \"cd frontend && npm run dev\" \"wait-on http://localhost:3000 && open-cli http://localhost:3000\"",
