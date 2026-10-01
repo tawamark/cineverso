@@ -9,6 +9,11 @@ export class CatalogoController {
   listarFilmes() {
     return this.catalogo.listarFilmes();
   }
+
+  @Get('filmes/:slug')
+  obterFilme(@Param('slug') slug: string) {
+    return this.catalogo.obterFilme(slug);
+  }
 }
 
 @Controller('sessoes')

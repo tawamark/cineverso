@@ -98,6 +98,35 @@ export class ComprasService {
     }
   }
 
+  listarCompras() {
+    return this.prisma.compra.findMany({
+      include: {
+        ingressos: { include: { assento: true, tipoIngresso: true } },
+        sessao: {
+          include: { filme: true, sala: { include: { cinema: true } } },
+        },
+      },
+      orderBy: { criadaEm: 'desc' },
+    });
+  }
+
+  async obterCompraAdmin(id: string) {
+    const compra = await this.prisma.compra.findUnique({
+      where: { id },
+      include: {
+        ingressos: {
+          include: { assento: true, tipoIngresso: true },
+          orderBy: [{ assento: { fileira: 'asc' } }, { assento: { numero: 'asc' } }],
+        },
+        sessao: {
+          include: { filme: true, sala: { include: { cinema: true } } },
+        },
+      },
+    });
+    if (!compra) throw new NotFoundException('Compra não encontrada');
+    return compra;
+  }
+
   async obterCompra(codigo: string) {
     const compra = await this.prisma.compra.findUnique({
       where: { codigo },

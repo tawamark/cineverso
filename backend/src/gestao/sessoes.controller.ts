@@ -15,6 +15,7 @@ import {
   IsBoolean,
   IsDateString,
   IsInt,
+  IsIn,
   IsUUID,
   Matches,
   Max,
@@ -31,6 +32,8 @@ class SessaoDto {
   @IsUUID() salaId: string;
   @IsDateString() @Matches(/(?:Z|[+-]\d{2}:\d{2})$/) inicio: string;
   @IsInt() @Min(0) @Max(1_000_000) precoBaseCentavos: number;
+  @IsIn(['2D', '3D']) formato: string;
+  @IsIn(['DUBLADO', 'LEGENDADO', 'ORIGINAL']) versao: string;
   @OptionalField() @IsBoolean() publicada?: boolean;
 }
 
@@ -42,6 +45,10 @@ class AtualizarSessaoDto {
   @Matches(/(?:Z|[+-]\d{2}:\d{2})$/)
   inicio?: string;
   @OptionalField() @IsInt() @Min(0) @Max(1_000_000) precoBaseCentavos?: number;
+  @OptionalField() @IsIn(['2D', '3D']) formato?: string;
+  @OptionalField()
+  @IsIn(['DUBLADO', 'LEGENDADO', 'ORIGINAL'])
+  versao?: string;
   @OptionalField() @IsBoolean() publicada?: boolean;
 }
 
@@ -107,7 +114,21 @@ export class SessoesController {
 
   @Get(':id')
   async obter(@Param('id') id: string) {
-    const sessao = await this.prisma.sessao.findUnique({ where: { id } });
+    const sessao = await this.prisma.sessao.findUnique({
+      where: { id },
+      include: {
+        filme: true,
+        sala: {
+          include: {
+            cinema: true,
+            assentos: { orderBy: [{ fileira: 'asc' }, { numero: 'asc' }] },
+            _count: { select: { assentos: true } },
+          },
+        },
+        ingressos: { select: { assentoId: true } },
+        _count: { select: { ingressos: true, compras: true } },
+      },
+    });
     if (!sessao) throw new NotFoundException('Sessão não encontrada');
     return sessao;
   }
@@ -126,7 +147,7 @@ export class SessoesController {
         Object.keys(dto).some((key) => key !== 'publicada')
       ) {
         throw new ConflictException(
-          'Sessão com ingressos não pode mudar filme, sala, horário ou preço',
+          'Sessão com ingressos não pode alterar seus dados de exibição',
         );
       }
       if (atual._count.compras > 0 && dto.publicada === false) {

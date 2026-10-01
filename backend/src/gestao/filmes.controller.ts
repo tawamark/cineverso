@@ -16,7 +16,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUrl,
+  Matches,
   Max,
   Min,
 } from 'class-validator';
@@ -30,7 +30,12 @@ class FilmeDto {
   @IsOptional() @IsString() sinopse?: string;
   @IsOptional() @IsString() classificacao?: string;
   @IsOptional() @IsString() genero?: string;
-  @IsOptional() @IsUrl() cartazUrl?: string;
+  @IsOptional()
+  @IsString()
+  @Matches(/^(https?:\/\/|data:image\/(?:png|jpeg|webp);base64,)/, {
+    message: 'cartazUrl deve ser uma imagem válida',
+  })
+  cartazUrl?: string;
 }
 
 class AtualizarFilmeDto {
@@ -39,7 +44,12 @@ class AtualizarFilmeDto {
   @IsOptional() @IsString() sinopse?: string;
   @IsOptional() @IsString() classificacao?: string;
   @IsOptional() @IsString() genero?: string;
-  @IsOptional() @IsUrl() cartazUrl?: string;
+  @IsOptional()
+  @IsString()
+  @Matches(/^(https?:\/\/|data:image\/(?:png|jpeg|webp);base64,)/, {
+    message: 'cartazUrl deve ser uma imagem válida',
+  })
+  cartazUrl?: string;
   @OptionalField() @IsBoolean() ativo?: boolean;
 }
 
@@ -48,9 +58,32 @@ class AtualizarFilmeDto {
 export class FilmesController {
   constructor(private readonly prisma: PrismaService) {}
 
+  private async gerarSlug(titulo: string, ignorarId?: string) {
+    const base =
+      titulo
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || 'filme';
+    let slug = base;
+    let sufixo = 2;
+    while (
+      await this.prisma.filme.findFirst({
+        where: { slug, id: ignorarId ? { not: ignorarId } : undefined },
+        select: { id: true },
+      })
+    ) {
+      slug = `${base}-${sufixo++}`;
+    }
+    return slug;
+  }
+
   @Post()
-  criar(@Body() dto: FilmeDto) {
-    return this.prisma.filme.create({ data: dto });
+  async criar(@Body() dto: FilmeDto) {
+    return this.prisma.filme.create({
+      data: { ...dto, slug: await this.gerarSlug(dto.titulo) },
+    });
   }
 
   @Get()
@@ -67,8 +100,11 @@ export class FilmesController {
 
   @Patch(':id')
   async atualizar(@Param('id') id: string, @Body() dto: AtualizarFilmeDto) {
-    await this.obter(id);
-    return this.prisma.filme.update({ where: { id }, data: dto });
+    const atual = await this.obter(id);
+    const slug = dto.titulo && dto.titulo !== atual.titulo
+      ? await this.gerarSlug(dto.titulo, id)
+      : undefined;
+    return this.prisma.filme.update({ where: { id }, data: { ...dto, slug } });
   }
 
   @Delete(':id')

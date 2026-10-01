@@ -60,6 +60,7 @@ model Assento {
 model Filme {
   id             String   @id @default(uuid())
   titulo         String
+  slug           String   @unique
   sinopse        String?
   duracaoMinutos Int
   classificacao  String?
@@ -88,6 +89,8 @@ model Sessao {
   inicio            DateTime
   fim               DateTime
   precoBaseCentavos Int
+  formato           String    @default("2D")
+  versao            String    @default("DUBLADO")
   publicada         Boolean   @default(true)
   compras           Compra[]
   ingressos         Ingresso[]

@@ -5,6 +5,7 @@ import { SalasController } from './salas.controller.js';
 import { FilmesController } from './filmes.controller.js';
 import { TiposIngressoController } from './tipos-ingresso.controller.js';
 import { SessoesController } from './sessoes.controller.js';
+import { VisaoGeralController } from './visao-geral.controller.js';
 
 @Module({
   imports: [AdminModule],
@@ -14,6 +15,7 @@ import { SessoesController } from './sessoes.controller.js';
     FilmesController,
     TiposIngressoController,
     SessoesController,
+    VisaoGeralController,
   ],
 })
 export class GestaoModule {}

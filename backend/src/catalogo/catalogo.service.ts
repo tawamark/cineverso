@@ -14,7 +14,7 @@ export class CatalogoService {
       sala: { ativo: true, cinema: { ativo: true } },
     };
     return this.prisma.filme.findMany({
-      where: { ativo: true, sessoes: { some: sessaoAtiva } },
+      where: { ativo: true },
       include: {
         sessoes: {
           where: sessaoAtiva,
@@ -24,6 +24,27 @@ export class CatalogoService {
       },
       orderBy: { titulo: 'asc' },
     });
+  }
+
+  async obterFilme(slug: string) {
+    const agora = new Date();
+    const sessaoAtiva = {
+      publicada: true,
+      inicio: { gt: agora },
+      sala: { ativo: true, cinema: { ativo: true } },
+    };
+    const filme = await this.prisma.filme.findFirst({
+      where: { slug, ativo: true },
+      include: {
+        sessoes: {
+          where: sessaoAtiva,
+          include: { sala: { include: { cinema: true } } },
+          orderBy: { inicio: 'asc' },
+        },
+      },
+    });
+    if (!filme) throw new NotFoundException('Filme não disponível');
+    return filme;
   }
 
   private async sessaoPublica(id: string) {

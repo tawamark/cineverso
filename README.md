@@ -2,9 +2,9 @@
 
 O CineVerso é um sistema web desenvolvido para a disciplina de Programação IV.
 
-A ideia do projeto é criar uma aplicação para venda de ingressos e gerenciamento de um cinema, permitindo cadastrar filmes, salas, sessões e controlar os ingressos vendidos.
+A aplicação reúne um catálogo público para escolha de filmes e ingressos e um painel administrativo para gerenciar a operação do cinema.
 
-> **Status:** backend do MVP implementado; a interface do totem ainda não está integrada.
+> **Status:** MVP full stack funcional em desenvolvimento, com frontend, API e banco de dados integrados.
 
 ## Integrantes
 
@@ -12,18 +12,22 @@ A ideia do projeto é criar uma aplicação para venda de ingressos e gerenciame
 - Thauan Gustavo Kerber
 - Gilmar Antes Junior
 
-## Funcionalidades planejadas
+## Funcionalidades
 
 O sistema terá como principais funcionalidades:
 
-- Cadastro de filmes
-- Edição e exclusão de filmes
-- Cadastro de salas
-- Gerenciamento das salas
-- Cadastro de sessões
-- Gerenciamento de horários e valores das sessões
-- Venda de ingressos
-- Consulta das sessões disponíveis
+- Catálogo público com filmes em cartaz e lançamentos em breve
+- Busca pública por título ou gênero
+- Detalhes do filme e consulta de sessões disponíveis
+- Escolha de poltronas e tipos de ingresso
+- Confirmação simulada da compra, sem processamento de pagamento
+- Consulta posterior de ingressos pelo código da compra
+- Autenticação do administrador
+- Visão geral com indicadores operacionais
+- Cadastro e gerenciamento de cinemas, salas, filmes, sessões e tipos de ingresso
+- Consulta de vendas, ingressos e ocupação das salas
+- URLs amigáveis para filmes
+- Validação dos formulários e páginas de erro 404, 500 e 503
 
 ## Tecnologias
 
@@ -36,15 +40,7 @@ O sistema terá como principais funcionalidades:
 
 ## Identidade visual
 
-A interface utiliza a seguinte paleta principal:
-
-| Uso | Cor |
-| --- | --- |
-| Fundo | `#10151b` |
-| Ações e botões | `#1d63ed` |
-| Textos | `#ffffff` |
-
-No frontend, essas cores estão disponíveis no Tailwind CSS como `background`, `primary` e `foreground`.
+A identidade utiliza a fonte Sora, ícones Lucide e a paleta registrada em [docs/color-palette.md](docs/color-palette.md).
 
 ## Estrutura do projeto
 
@@ -52,6 +48,7 @@ No frontend, essas cores estão disponíveis no Tailwind CSS como `background`, 
 cineverso/
 ├── frontend/          # Aplicação Next.js
 ├── backend/           # API NestJS e configuração do Prisma
+├── docs/              # Documentação funcional, visual e técnica
 ├── compose.yaml       # PostgreSQL para desenvolvimento local
 ├── package.json       # Comandos integrados do projeto
 ├── .gitignore
@@ -148,6 +145,13 @@ Execute os comandos abaixo na raiz do projeto:
 ## Banco de dados
 
 O schema Prisma e as migrations incluem cinemas, salas e assentos, filmes, sessões, tipos de ingresso, compras e ingressos. Depois de configurar `backend/.env`, execute `npm run db:migrate` na pasta `backend`. A [documentação da API](backend/README.md) descreve rotas, autenticação administrativa e testes com banco separado.
+
+## Documentação
+
+- [Visão funcional do MVP](docs/mvp.md)
+- [Arquitetura e fluxos](docs/architecture.md)
+- [Paleta de cores](docs/color-palette.md)
+- [API do backend](backend/README.md)
 
 ## Aplicação online
 

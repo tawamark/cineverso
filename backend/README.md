@@ -31,7 +31,11 @@ Para testar, mantenha o Docker Compose ativo e execute `npm test`, `npm run test
 | `GET/PATCH/DELETE /admin/tipos-ingresso/:id` | Consulta/edita/exclui tipo |
 | `GET/POST /admin/sessoes` | Lista/cadastra sessões |
 | `GET/PATCH/DELETE /admin/sessoes/:id` | Consulta/edita/exclui sessão |
-| `GET /catalogo/filmes` | Filmes ativos com sessões futuras publicadas |
+| `GET /admin/visao-geral` | Indicadores e dados resumidos do painel |
+| `GET /admin/compras` | Lista as vendas registradas |
+| `GET /admin/compras/:id` | Exibe os detalhes de uma venda |
+| `GET /catalogo/filmes` | Filmes ativos em cartaz ou em breve |
+| `GET /catalogo/filmes/:slug` | Detalhes públicos de um filme pelo slug |
 | `GET /sessoes/:id` | Sessão pública, cinema, sala e preços por tipo vigente |
 | `GET /sessoes/:id/assentos` | Grade de assentos e disponibilidade |
 | `POST /compras` | Confirma ingressos para uma sessão |
@@ -44,9 +48,9 @@ Todas as rotas `/admin`, exceto `/admin/login`, exigem `Authorization: Bearer <t
 
 - Cinema: `nome`, `cidade`, `endereco`, `ativo`.
 - Sala: `cinemaId`, `nome`, `fileiras` (1 a 26), `assentosPorFileira` (1 a 50), `ativo`. A grade usa A1, A2 etc. Só pode mudar antes de cadastrar sessões.
-- Filme: `titulo`, `duracaoMinutos` e, opcionalmente, `sinopse`, `classificacao`, `genero`, `cartazUrl`, `ativo`.
+- Filme: `titulo`, `slug`, `duracaoMinutos` e, opcionalmente, `sinopse`, `classificacao`, `genero`, `cartazUrl`, `ativo`. O slug é gerado automaticamente e mantido único.
 - Tipo de ingresso: `nome`, `descontoPercentual` (0 a 100), `inicioVigencia`, `fimVigencia`, `ativo`. Datas opcionais de vigência são verificadas na hora da compra.
-- Sessão: `filmeId`, `salaId`, `inicio`, `precoBaseCentavos` (0 a 1.000.000), `publicada`. A API calcula `fim` a partir da duração do filme ao cadastrar ou reagendar a sessão. Datas enviadas precisam incluir `Z` ou fuso explícito.
+- Sessão: `filmeId`, `salaId`, `inicio`, `precoBaseCentavos` (0 a 1.000.000), `formato` (`2D` ou `3D`), `versao` (`DUBLADO`, `LEGENDADO` ou `ORIGINAL`) e `publicada`. A API calcula `fim` a partir da duração do filme ao cadastrar ou reagendar a sessão. Datas enviadas precisam incluir `Z` ou fuso explícito.
 
 Exemplo de compra, depois de consultar os IDs da sessão, assentos e tipos:
 
