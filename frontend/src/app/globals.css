@@ -1,21 +1,144 @@
 @import "tailwindcss";
 
 :root {
-  --background: #10151b;
-  --primary: #1d63ed;
-  --foreground: #ffffff;
+  --background: #fefefe;
+  --foreground: #171b31;
+  --primary: #3b5fa4;
+  --accent: #9b3430;
+  --muted: #aeb7c2;
+}
+
+@keyframes global-progress {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(310%); }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-0.5rem) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toast-progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-primary: var(--primary);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-sora);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
 }
 
 body {
+  min-width: 320px;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sora), Arial, Helvetica, sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:not(:disabled),
+a[href],
+[role="button"],
+summary,
+select,
+input[type="checkbox"],
+input[type="radio"],
+label[for] {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.scrollbar-dark {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 35%) rgb(255 255 255 / 8%);
+}
+
+.scrollbar-dark::-webkit-scrollbar {
+  width: 7px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgb(255 255 255 / 8%);
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(255 255 255 / 35%);
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 55%);
+}
+
+.scrollbar-light {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(59 95 164 / 55%) rgb(23 27 49 / 8%);
+}
+
+.scrollbar-light::-webkit-scrollbar {
+  height: 7px;
+}
+
+.scrollbar-light::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgb(23 27 49 / 8%);
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(59 95 164 / 55%);
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background: rgb(59 95 164 / 75%);
+}
+
+@utility admin-input {
+  margin-top: 0.5rem;
+  height: 3rem;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--muted) 60%, transparent);
+  padding-inline: 1rem;
+  font-weight: 400;
+  outline: none;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--foreground) 30%, transparent);
+  }
+
+  &:focus {
+    border: 2px solid var(--primary);
+  }
 }

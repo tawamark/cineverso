@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,121 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model Administrador {
+  id        String       @id @default(uuid())
+  email     String       @unique
+  senhaHash String
+  tokens    TokenAdmin[]
+  criadoEm  DateTime     @default(now())
+}
+
+model TokenAdmin {
+  id              String        @id @default(uuid())
+  administradorId String
+  administrador   Administrador @relation(fields: [administradorId], references: [id], onDelete: Cascade)
+  hash            String        @unique
+  expiraEm        DateTime
+}
+
+model Cinema {
+  id       String  @id @default(uuid())
+  nome     String
+  cidade   String
+  endereco String
+  ativo    Boolean @default(true)
+  salas    Sala[]
+}
+
+model Sala {
+  id                 String    @id @default(uuid())
+  cinemaId           String
+  cinema             Cinema    @relation(fields: [cinemaId], references: [id])
+  nome               String
+  fileiras           Int
+  assentosPorFileira Int
+  ativo              Boolean   @default(true)
+  assentos           Assento[]
+  sessoes            Sessao[]
+
+  @@unique([cinemaId, nome])
+}
+
+model Assento {
+  id        String     @id @default(uuid())
+  salaId    String
+  sala      Sala       @relation(fields: [salaId], references: [id])
+  fileira   String
+  numero    Int
+  ingressos Ingresso[]
+
+  @@unique([salaId, fileira, numero])
+}
+
+model Filme {
+  id             String   @id @default(uuid())
+  titulo         String
+  slug           String   @unique
+  sinopse        String?
+  duracaoMinutos Int
+  classificacao  String?
+  genero         String?
+  cartazUrl      String?
+  ativo          Boolean  @default(true)
+  sessoes        Sessao[]
+}
+
+model TipoIngresso {
+  id                 String     @id @default(uuid())
+  nome               String     @unique
+  descontoPercentual Int
+  inicioVigencia     DateTime?
+  fimVigencia        DateTime?
+  ativo              Boolean    @default(true)
+  ingressos          Ingresso[]
+}
+
+model Sessao {
+  id                String    @id @default(uuid())
+  filmeId           String
+  filme             Filme     @relation(fields: [filmeId], references: [id])
+  salaId            String
+  sala              Sala      @relation(fields: [salaId], references: [id])
+  inicio            DateTime
+  fim               DateTime
+  precoBaseCentavos Int
+  formato           String    @default("2D")
+  versao            String    @default("DUBLADO")
+  publicada         Boolean   @default(true)
+  compras           Compra[]
+  ingressos         Ingresso[]
+
+  @@index([salaId, inicio, fim])
+}
+
+model Compra {
+  id            String     @id @default(uuid())
+  codigo        String     @unique
+  sessaoId      String
+  sessao        Sessao     @relation(fields: [sessaoId], references: [id])
+  totalCentavos Int
+  criadaEm      DateTime   @default(now())
+  ingressos     Ingresso[]
+}
+
+model Ingresso {
+  id             String       @id @default(uuid())
+  codigo         String       @unique
+  compraId       String
+  compra         Compra       @relation(fields: [compraId], references: [id])
+  sessaoId       String
+  sessao         Sessao       @relation(fields: [sessaoId], references: [id])
+  assentoId      String
+  assento        Assento      @relation(fields: [assentoId], references: [id])
+  tipoIngressoId String
+  tipoIngresso   TipoIngresso @relation(fields: [tipoIngressoId], references: [id])
+  precoCentavos  Int
+
+  @@unique([sessaoId, assentoId])
 }
