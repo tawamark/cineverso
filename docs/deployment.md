@@ -45,3 +45,15 @@ A Render executa automaticamente as migrations antes de iniciar a API. O endpoin
 
 No plano gratuito, o primeiro acesso depois de um período sem uso pode demorar enquanto a API é iniciada novamente.
 As consultas de leitura do frontend repetem automaticamente a conexão durante esse período.
+
+## Acesso de avaliação
+
+O MVP publicado disponibiliza um administrador com acesso completo para avaliação:
+
+```text
+URL: https://cineverso-topaz.vercel.app/admin/login
+E-mail: admin@cineverso.local
+Senha: CineVerso@2026
+```
+
+Essas credenciais pertencem somente ao ambiente acadêmico. Credenciais do PostgreSQL e demais segredos de infraestrutura não devem ser publicados.

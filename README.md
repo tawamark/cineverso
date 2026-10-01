@@ -162,6 +162,14 @@ O schema Prisma e as migrations incluem cinemas, salas e assentos, filmes, sess�
 
 Como a API utiliza o plano gratuito da Render, o primeiro acesso após um período sem uso pode levar alguns segundos.
 
+### Acesso administrativo para avaliação
+
+- Login: [https://cineverso-topaz.vercel.app/admin/login](https://cineverso-topaz.vercel.app/admin/login)
+- E-mail: `admin@cineverso.local`
+- Senha: `CineVerso@2026`
+
+Esse acesso possui permissões administrativas completas e foi disponibilizado exclusivamente para avaliação acadêmica do MVP.
+
 ## Vídeo de apresentação
 
 O link do vídeo de apresentação será adicionado quando o projeto estiver finalizado.

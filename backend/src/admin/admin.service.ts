@@ -29,11 +29,17 @@ export class AdminService implements OnModuleInit {
     const existing = await this.prisma.administrador.findUnique({
       where: { email },
     });
-    if (existing) return;
+
+    if (existing && (await this.senhaCorresponde(senha, existing.senhaHash))) {
+      return;
+    }
+
     const salt = randomBytes(16).toString('hex');
     const hash = (await scrypt(senha, salt, 64)) as Buffer;
-    await this.prisma.administrador.create({
-      data: { email, senhaHash: `${salt}:${hash.toString('hex')}` },
+    await this.prisma.administrador.upsert({
+      where: { email },
+      create: { email, senhaHash: `${salt}:${hash.toString('hex')}` },
+      update: { senhaHash: `${salt}:${hash.toString('hex')}` },
     });
   }
 
@@ -42,10 +48,7 @@ export class AdminService implements OnModuleInit {
       where: { email },
     });
     if (!admin) throw new UnauthorizedException('Credenciais inválidas');
-    const [salt, encoded] = admin.senhaHash.split(':');
-    const expected = Buffer.from(encoded, 'hex');
-    const actual = (await scrypt(senha, salt, expected.length)) as Buffer;
-    if (!timingSafeEqual(expected, actual)) {
+    if (!(await this.senhaCorresponde(senha, admin.senhaHash))) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
     const token = randomBytes(32).toString('base64url');
@@ -58,6 +61,18 @@ export class AdminService implements OnModuleInit {
       },
     });
     return { token, expiraEm };
+  }
+
+  private async senhaCorresponde(
+    senha: string,
+    senhaHash: string,
+  ): Promise<boolean> {
+    const [salt, encoded] = senhaHash.split(':');
+    if (!salt || !encoded) return false;
+
+    const expected = Buffer.from(encoded, 'hex');
+    const actual = (await scrypt(senha, salt, expected.length)) as Buffer;
+    return timingSafeEqual(expected, actual);
   }
 
   async tokenValido(token: string): Promise<boolean> {
