@@ -156,7 +156,11 @@ O schema Prisma e as migrations incluem cinemas, salas e assentos, filmes, sess�
 
 ## Aplicação online
 
-O link da aplicação será disponibilizado após o deploy.
+- Aplicação: [https://cineverso-topaz.vercel.app](https://cineverso-topaz.vercel.app)
+- API: [https://cineverso-api.onrender.com](https://cineverso-api.onrender.com)
+- Verificação da API: [https://cineverso-api.onrender.com/health](https://cineverso-api.onrender.com/health)
+
+Como a API utiliza o plano gratuito da Render, o primeiro acesso após um período sem uso pode levar alguns segundos.
 
 ## Vídeo de apresentação
 

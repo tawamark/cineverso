@@ -6,6 +6,12 @@ O ambiente online do CineVerso utiliza três serviços:
 - Render para a API NestJS.
 - Neon para o banco PostgreSQL.
 
+## Endereços publicados
+
+- Frontend: [https://cineverso-topaz.vercel.app](https://cineverso-topaz.vercel.app)
+- API: [https://cineverso-api.onrender.com](https://cineverso-api.onrender.com)
+- Health check: [https://cineverso-api.onrender.com/health](https://cineverso-api.onrender.com/health)
+
 ## Ordem de configuração
 
 1. Criar o banco no Neon e copiar sua string de conexão.
@@ -20,7 +26,7 @@ O ambiente online do CineVerso utiliza três serviços:
 
 ```env
 DATABASE_URL="postgresql://..."
-CORS_ORIGINS="https://cineverso.vercel.app"
+CORS_ORIGINS="https://cineverso-topaz.vercel.app"
 ADMIN_EMAIL="admin@exemplo.com"
 ADMIN_PASSWORD="uma-senha-forte"
 ```
