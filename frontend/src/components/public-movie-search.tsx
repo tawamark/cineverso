@@ -77,11 +77,42 @@ export function PublicMovieSearch() {
     {open && typeof document !== "undefined" && createPortal(<div role="dialog" aria-modal="true" aria-label="Buscar filmes" className="fixed inset-0 z-[200] overflow-y-auto bg-background text-foreground">
       <div className="sticky top-0 z-10 bg-background/95 py-5 backdrop-blur-sm"><div className="mx-auto flex max-w-[1600px] items-center gap-3 px-4 sm:px-8 lg:px-10"><div className="relative flex-1"><Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-foreground/40" /><input ref={inputRef} type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Busque por título ou gênero" className="h-14 w-full rounded-xl border border-muted/60 bg-white pl-12 pr-4 text-base outline-none transition focus:border-2 focus:border-primary" /></div><button type="button" aria-label="Fechar busca" onClick={closeSearch} className="grid size-12 shrink-0 place-items-center rounded-xl bg-foreground/[0.07] text-foreground transition hover:bg-foreground/[0.12] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-5" /></button></div></div>
       <div className="mx-auto max-w-[1600px] px-4 pb-16 pt-5 sm:px-8 lg:px-10"><div><h2 className="text-2xl font-bold tracking-tight">{query.trim() ? "Resultados" : "Filmes disponíveis"}</h2></div>
-        {loading && <div className="min-h-64" />}
+        {loading && <MovieSearchSkeleton />}
         {error && <div className="flex min-h-64 flex-col items-center justify-center text-center"><Film className="size-9 text-accent" /><p className="mt-4 font-bold">Não foi possível carregar os filmes.</p><button type="button" onClick={showSearch} className="mt-5 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white">Tentar novamente</button></div>}
         {!loading && !error && results.length === 0 && <div className="flex min-h-64 flex-col items-center justify-center text-center"><Search className="size-9 text-primary" /><p className="mt-4 font-bold">Nenhum filme encontrado</p><p className="mt-2 text-sm text-foreground/50">Tente buscar usando outro título ou gênero.</p><button type="button" onClick={() => { setQuery(""); inputRef.current?.focus(); }} className="mt-5 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-primary/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Limpar busca</button></div>}
         {!loading && !error && results.length > 0 && <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{results.map((movie) => { const classification = rating(movie); return <Link key={movie.id} href={`/filmes/${movie.slug}`} onClick={closeSearch} className="group flex min-w-0 gap-4 rounded-2xl bg-[#e2e6ec] p-3 transition hover:bg-muted/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><div className="aspect-[2/3] w-20 shrink-0 overflow-hidden rounded-xl bg-primary/15 sm:w-24">{movie.cartazUrl ? <img src={movie.cartazUrl} alt={`Cartaz de ${movie.titulo}`} className="size-full object-cover transition group-hover:scale-[1.03]" /> : <div className="grid size-full place-items-center bg-foreground"><Film className="size-7 text-white/60" /></div>}</div><div className="flex min-w-0 flex-1 flex-col py-1"><h3 className="font-bold sm:text-lg">{movie.titulo}</h3><p className="mt-2 text-sm text-foreground/55">{movie.genero || "Gênero não informado"}</p><div className="mt-auto flex items-center justify-between gap-3 pt-4"><span className="flex items-center gap-1.5 text-xs text-foreground/50"><Clock3 className="size-3.5" />{duration(movie.duracaoMinutos)}</span><span className={`grid size-7 place-items-center rounded-md text-[10px] font-extrabold text-white ${classification.style}`}>{classification.label}</span></div></div></Link>; })}</div>}
       </div>
     </div>, document.body)}
   </>;
+}
+
+function MovieSearchSkeleton() {
+  return (
+    <div
+      className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+      role="status"
+      aria-label="Carregando filmes disponíveis"
+    >
+      {Array.from({ length: 3 }, (_, index) => (
+        <div
+          key={index}
+          className={`flex min-w-0 gap-4 p-3 ${
+            index === 1 ? "hidden md:flex" : index === 2 ? "hidden xl:flex" : "flex"
+          }`}
+          aria-hidden="true"
+        >
+          <div className="skeleton-shimmer aspect-[2/3] w-20 shrink-0 rounded-xl sm:w-24" />
+          <div className="flex min-w-0 flex-1 flex-col py-1">
+            <div className="skeleton-shimmer h-5 w-3/4 rounded-md" />
+            <div className="skeleton-shimmer mt-3 h-4 w-1/2 rounded" />
+            <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+              <div className="skeleton-shimmer h-3 w-20 rounded" />
+              <div className="skeleton-shimmer size-7 rounded-md" />
+            </div>
+          </div>
+        </div>
+      ))}
+      <span className="sr-only">Carregando filmes disponíveis...</span>
+    </div>
+  );
 }

@@ -39,11 +39,67 @@ const navigation = [
   { label: "Vendas", href: "/admin/vendas", icon: ReceiptText },
 ];
 
+type AdminProfileMenuProps = {
+  email?: string;
+  onLogout: () => void;
+};
+
+function AdminProfileMenu({ email, onLogout }: AdminProfileMenuProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => setOpen((current) => !current)}
+        className="flex items-center gap-3 rounded-xl bg-[#f4f5f7] px-3 py-2 text-left transition hover:bg-muted/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-w-56"
+      >
+        <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary font-bold text-white">
+          A
+        </div>
+        <div className="hidden min-w-0 flex-1 sm:block">
+          <p className="truncate text-sm font-semibold">Administrador</p>
+          <p className="truncate text-xs text-foreground/50">{email}</p>
+        </div>
+        <ChevronDown
+          aria-hidden="true"
+          className={`size-4 text-foreground/55 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 top-[calc(100%+0.5rem)] w-72 rounded-xl border border-muted/35 bg-white p-2 shadow-[0_18px_50px_rgba(23,27,49,0.14)]"
+        >
+          <div className="px-3 py-3">
+            <p className="text-sm font-semibold text-foreground">Administrador</p>
+            <p className="mt-1 truncate text-xs text-foreground/55">{email}</p>
+          </div>
+          <div className="my-1 h-px bg-muted/30" />
+          <button
+            type="button"
+            role="menuitem"
+            onClick={onLogout}
+            className="flex h-11 w-full items-center gap-3 rounded-lg px-3 text-sm font-semibold text-accent transition hover:bg-accent/8 focus-visible:outline-2 focus-visible:outline-primary"
+          >
+            <LogOut aria-hidden="true" className="size-4" />
+            Sair
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function AdminShell({ children }: AdminShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const isAuthenticated = useSyncExternalStore(
     subscribeToAdminSession,
     () => getAdminSession() !== null,
@@ -151,53 +207,11 @@ export function AdminShell({ children }: AdminShellProps) {
             </button>
           </div>
 
-          <div className="relative">
-            <button
-              type="button"
-              aria-expanded={profileOpen}
-              aria-haspopup="menu"
-              onClick={() => setProfileOpen((open) => !open)}
-              className="flex items-center gap-3 rounded-xl bg-[#f4f5f7] px-3 py-2 text-left transition hover:bg-muted/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-w-56"
-            >
-              <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary font-bold text-white">
-                A
-              </div>
-              <div className="hidden min-w-0 flex-1 sm:block">
-                <p className="truncate text-sm font-semibold">Administrador</p>
-                <p className="truncate text-xs text-foreground/50">{session?.email}</p>
-              </div>
-              <ChevronDown
-                aria-hidden="true"
-                className={`size-4 text-foreground/55 transition-transform ${
-                  profileOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-
-            {profileOpen && (
-              <div
-                role="menu"
-                className="absolute right-0 top-[calc(100%+0.5rem)] w-72 rounded-xl border border-muted/35 bg-white p-2 shadow-[0_18px_50px_rgba(23,27,49,0.14)]"
-              >
-                <div className="px-3 py-3">
-                  <p className="text-sm font-semibold text-foreground">Administrador</p>
-                  <p className="mt-1 truncate text-xs text-foreground/55">
-                    {session?.email}
-                  </p>
-                </div>
-                <div className="my-1 h-px bg-muted/30" />
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={logout}
-                  className="flex h-11 w-full items-center gap-3 rounded-lg px-3 text-sm font-semibold text-accent transition hover:bg-accent/8 focus-visible:outline-2 focus-visible:outline-primary"
-                >
-                  <LogOut aria-hidden="true" className="size-4" />
-                  Sair
-                </button>
-              </div>
-            )}
-          </div>
+          <AdminProfileMenu
+            key={pathname}
+            email={session?.email}
+            onLogout={logout}
+          />
         </header>
 
         <main className="mx-auto w-full max-w-[1600px] px-5 py-8 sm:px-7 lg:px-10 lg:py-10">

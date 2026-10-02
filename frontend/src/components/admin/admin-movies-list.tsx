@@ -14,6 +14,7 @@ import { AdminEmptyState } from "./admin-empty-state";
 import { AdminActionsMenu } from "./admin-actions-menu";
 import { AdminSearch } from "./admin-search";
 import { AdminNoResults } from "./admin-no-results";
+import { AdminTableSkeleton } from "./admin-skeletons";
 
 type MoviesState =
   | { status: "loading"; movies: AdminMovie[] }
@@ -79,6 +80,7 @@ export function AdminMoviesList() {
       </div>
       <AdminSearch placeholder="Buscar por título, gênero ou classificação" onSearch={setQuery} />
 
+      {state.status === "loading" && <AdminTableSkeleton />}
       {state.status === "error" && <MoviesError />}
       {state.status === "success" && state.movies.length === 0 && (
         <AdminEmptyState icon={Clapperboard} title="Nenhum filme cadastrado" description="Os filmes adicionados ao sistema aparecerão aqui." />

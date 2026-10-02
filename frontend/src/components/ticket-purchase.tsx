@@ -86,8 +86,10 @@ export function TicketPurchase({ sessionId }: { sessionId: string }) {
     }
   }
 
-  if (loading) return <div className="min-h-screen" />;
+  if (loading) return <TicketPurchaseSkeleton />;
   if (!session) return <section className="mx-auto max-w-[1600px] px-6 pb-20 pt-32 sm:px-8 lg:px-10"><h1 className="text-3xl font-bold">Sessão não disponível</h1>{error && <p className="mt-3 text-red-600">{error}</p>}</section>;
+
+  if (submitting) return <PurchaseConfirmationSkeleton />;
 
   const starts = new Date(session.inicio);
 
@@ -123,6 +125,114 @@ export function TicketPurchase({ sessionId }: { sessionId: string }) {
           <button type="button" disabled={!selectedSeats.length || submitting || !session.tiposIngresso.length} onClick={confirmPurchase} className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary font-bold text-white transition hover:bg-primary/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-45"><Ticket className="size-4" />{submitting ? "Confirmando..." : "Confirmar compra"}</button>
         </aside>
       </div>
+    </section>
+  );
+}
+
+function TicketPurchaseSkeleton() {
+  const seatRows = [12, 14, 14, 16, 16, 14, 12];
+
+  return (
+    <section
+      className="mx-auto w-full max-w-[1600px] px-4 pb-16 pt-28 sm:px-8 sm:pb-20 sm:pt-32 lg:px-10"
+      role="status"
+      aria-label="Carregando sessão e assentos"
+    >
+      <div aria-hidden="true">
+        <div className="skeleton-shimmer h-10 w-72 max-w-full rounded-lg" />
+        <div className="skeleton-shimmer mt-4 h-4 w-full max-w-xl rounded" />
+      </div>
+
+      <div className="mt-7 grid min-w-0 gap-6 sm:mt-9 sm:gap-8 xl:grid-cols-[minmax(0,1fr)_420px]" aria-hidden="true">
+        <div className="min-w-0">
+          <div className="mb-7 flex items-center justify-between gap-4">
+            <div className="skeleton-shimmer h-6 w-36 rounded-md" />
+            <div className="skeleton-shimmer h-6 w-36 rounded-full" />
+          </div>
+          <div className="mx-auto mb-10 max-w-2xl">
+            <div className="skeleton-shimmer h-8 w-full rounded-[50%]" />
+            <div className="skeleton-shimmer mx-auto mt-3 h-4 w-10 rounded" />
+          </div>
+          <div className="mx-auto w-max max-w-full space-y-2 overflow-hidden px-1">
+            {seatRows.map((amount, row) => (
+              <div key={row} className="flex items-center gap-2">
+                <div className="skeleton-shimmer h-3 w-4 shrink-0 rounded" />
+                <div className="flex gap-1.5">
+                  {Array.from({ length: amount }, (_, seat) => (
+                    <div key={seat} className="skeleton-shimmer size-6 shrink-0 rounded sm:size-7" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-9 space-y-3">
+            <div className="skeleton-shimmer h-4 w-20 rounded" />
+            <div className="flex gap-5">
+              <div className="skeleton-shimmer h-3 w-24 rounded" />
+              <div className="skeleton-shimmer h-3 w-24 rounded" />
+              <div className="skeleton-shimmer h-3 w-24 rounded" />
+            </div>
+          </div>
+        </div>
+
+        <aside className="h-fit rounded-2xl bg-foreground p-5 sm:p-7">
+          <div className="flex items-start justify-between gap-4">
+            <div className="skeleton-shimmer-dark h-7 w-3/5 rounded-md" />
+            <div className="flex gap-2">
+              <div className="skeleton-shimmer-dark h-7 w-10 rounded-md" />
+              <div className="skeleton-shimmer-dark h-7 w-12 rounded-md" />
+            </div>
+          </div>
+          <div className="mt-6 space-y-4">
+            <div className="skeleton-shimmer-dark h-4 w-3/4 rounded" />
+            <div className="skeleton-shimmer-dark h-4 w-20 rounded" />
+            <div className="skeleton-shimmer-dark h-4 w-2/3 rounded" />
+          </div>
+          <div className="skeleton-shimmer-dark mt-12 h-4 w-1/2 rounded" />
+          <div className="mt-10 flex justify-between gap-4">
+            <div className="skeleton-shimmer-dark h-5 w-16 rounded" />
+            <div className="skeleton-shimmer-dark h-7 w-24 rounded-md" />
+          </div>
+          <div className="skeleton-shimmer-dark mt-6 h-12 w-full rounded-xl" />
+        </aside>
+      </div>
+      <span className="sr-only">Carregando sessão e mapa de assentos...</span>
+    </section>
+  );
+}
+
+function PurchaseConfirmationSkeleton() {
+  return (
+    <section
+      className="mx-auto max-w-4xl px-4 pb-16 pt-28 sm:px-8 sm:pb-20 sm:pt-32"
+      role="status"
+      aria-label="Confirmando compra"
+    >
+      <div className="flex flex-col items-center" aria-hidden="true">
+        <div className="skeleton-shimmer size-14 rounded-full" />
+        <div className="skeleton-shimmer mt-5 h-10 w-72 max-w-full rounded-lg" />
+        <div className="skeleton-shimmer mt-4 h-4 w-80 max-w-full rounded" />
+      </div>
+      <div className="mt-10 p-4 sm:p-8" aria-hidden="true">
+        <div className="skeleton-shimmer h-4 w-32 rounded" />
+        <div className="skeleton-shimmer mt-3 h-6 w-2/3 rounded-md" />
+        <div className="mt-8 space-y-5">
+          {Array.from({ length: 2 }, (_, index) => (
+            <div key={index} className="flex flex-col justify-between gap-4 p-4 sm:flex-row sm:items-center">
+              <div className="flex-1 space-y-3">
+                <div className="skeleton-shimmer h-5 w-3/5 rounded" />
+                <div className="skeleton-shimmer h-3 w-4/5 rounded" />
+              </div>
+              <div className="skeleton-shimmer h-5 w-20 rounded" />
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 flex items-center justify-between gap-4 pt-5">
+          <div className="skeleton-shimmer h-5 w-14 rounded" />
+          <div className="skeleton-shimmer h-8 w-28 rounded-md" />
+        </div>
+      </div>
+      <span className="sr-only">Confirmando sua compra...</span>
     </section>
   );
 }

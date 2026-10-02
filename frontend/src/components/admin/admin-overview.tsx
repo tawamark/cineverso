@@ -25,7 +25,7 @@ export function AdminOverviewContent() {
   }, []);
 
   if (error) return <div className="mt-8 flex min-h-72 flex-col items-center justify-center rounded-2xl bg-white px-6 text-center shadow-[0_8px_30px_rgba(23,27,49,0.05)]"><CircleAlert className="size-9 text-accent" /><h2 className="mt-5 text-xl font-bold">Não foi possível carregar a visão geral</h2><p className="mt-2 text-foreground/55">Verifique a conexão com o servidor e tente novamente.</p></div>;
-  if (!data) return null;
+  if (!data) return <AdminOverviewSkeleton />;
 
   const stats = data.estatisticas;
   return <>
@@ -40,6 +40,51 @@ export function AdminOverviewContent() {
       <section><h2 className="text-xl font-bold">Próximas sessões</h2><div className="mt-5 overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(23,27,49,0.05)]">{data.proximasSessoes.length === 0 ? <Empty text="Nenhuma sessão futura publicada." /> : <><div className="hidden grid-cols-[1fr_150px_100px] gap-4 bg-foreground/[0.035] px-5 py-4 text-xs font-semibold text-foreground/55 sm:grid"><span>Filme</span><span>Data</span><span className="text-right">Vendidos</span></div><div className="divide-y divide-muted/20">{data.proximasSessoes.map((session) => <div key={session.id} className="grid gap-2 px-5 py-4 sm:grid-cols-[1fr_150px_100px] sm:items-center sm:gap-4"><div className="min-w-0"><p className="truncate font-semibold">{session.filme.titulo}</p><p className="mt-1 truncate text-xs text-foreground/45">{session.sala.nome}</p><div className="mt-2 flex gap-1.5"><span className="rounded-md bg-accent px-2 py-1 text-[10px] font-bold text-white">{session.formato}</span><span className="rounded-md bg-accent px-2 py-1 text-[10px] font-bold text-white">{session.versao === "DUBLADO" ? "Dub" : session.versao === "LEGENDADO" ? "Leg" : "Original"}</span></div></div><p className="text-sm text-foreground/65">{dateFormatter.format(new Date(session.inicio))} · {timeFormatter.format(new Date(session.inicio))}</p><p className="font-bold text-primary sm:text-right">{session._count.ingressos}</p></div>)}</div></>}</div></section>
     </div>
   </>;
+}
+
+function AdminOverviewSkeleton() {
+  return (
+    <div role="status" aria-label="Carregando visão geral">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">
+        {Array.from({ length: 4 }, (_, index) => (
+          <div key={index} className="p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <div className="skeleton-shimmer h-4 w-2/3 rounded" />
+                <div className="skeleton-shimmer mt-4 h-8 w-1/2 rounded-md" />
+              </div>
+              <div className="skeleton-shimmer size-7 rounded-md" />
+            </div>
+            <div className="skeleton-shimmer mt-5 h-3 w-3/5 rounded" />
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 grid gap-8 2xl:grid-cols-2" aria-hidden="true">
+        {Array.from({ length: 2 }, (_, sectionIndex) => (
+          <section key={sectionIndex}>
+            <div className="skeleton-shimmer h-6 w-44 rounded-md" />
+            <div className="mt-5 space-y-1">
+              {Array.from({ length: 4 }, (_, rowIndex) => (
+                <div
+                  key={rowIndex}
+                  className="grid min-h-20 gap-3 px-5 py-4 sm:grid-cols-[1fr_150px_100px] sm:items-center sm:gap-4"
+                >
+                  <div className="space-y-2">
+                    <div className="skeleton-shimmer h-4 w-3/4 rounded" />
+                    <div className="skeleton-shimmer h-3 w-2/5 rounded" />
+                  </div>
+                  <div className="skeleton-shimmer h-4 w-3/4 rounded" />
+                  <div className="skeleton-shimmer h-5 w-16 rounded sm:ml-auto" />
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+      <span className="sr-only">Carregando estatísticas...</span>
+    </div>
+  );
 }
 
 function Metric({ icon: Icon, label, value, detail }: { icon: LucideIcon; label: string; value: string; detail: string }) {
