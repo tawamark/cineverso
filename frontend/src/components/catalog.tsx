@@ -37,7 +37,7 @@ export function Catalog() {
     return () => controller.abort();
   }, []);
 
-  if (state.status === "loading") return null;
+  if (state.status === "loading") return <CatalogSkeleton />;
   if (state.status === "error") return <section className="mx-auto max-w-[1600px] px-6 py-16 sm:px-8 sm:py-20 lg:px-10"><div className="rounded-3xl bg-accent/10 px-6 py-12 text-center sm:px-10"><p className="text-xl font-bold">Não foi possível carregar o catálogo.</p><p className="mt-2 text-foreground/65">Verifique se o backend está em execução e tente novamente.</p><button type="button" onClick={retry} className="mt-6 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">Tentar novamente</button></div></section>;
 
   const nowPlaying = state.movies.filter((movie) => movie.sessoes.length > 0);
@@ -47,6 +47,53 @@ export function Catalog() {
     <MovieRail id="em-cartaz" title="Em cartaz" movies={nowPlaying} emptyText="Nenhum filme em cartaz no momento." />
     <MovieRail id="em-breve" title="Em breve" movies={comingSoon} emptyText="Nenhuma estreia anunciada no momento." className="mt-16 sm:mt-20" />
   </div>;
+}
+
+function CatalogSkeleton() {
+  return (
+    <div
+      className="mx-auto max-w-[1600px] px-6 py-16 sm:px-8 sm:py-20 lg:px-10"
+      role="status"
+      aria-label="Carregando catálogo de filmes"
+    >
+      <SkeletonRail />
+      <SkeletonRail className="mt-16 sm:mt-20" />
+      <span className="sr-only">Carregando filmes...</span>
+    </div>
+  );
+}
+
+function SkeletonRail({ className = "" }: { className?: string }) {
+  const visibility = [
+    "block",
+    "hidden sm:block",
+    "hidden lg:block",
+    "hidden lg:block",
+    "hidden 2xl:block",
+  ];
+
+  return (
+    <section className={className} aria-hidden="true">
+      <div className="skeleton-shimmer mb-8 h-10 w-44 rounded-lg sm:mb-10 sm:w-52" />
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
+        {visibility.map((classes, index) => (
+          <div
+            key={index}
+            className={classes}
+          >
+            <div className="skeleton-shimmer aspect-[2/3] rounded-2xl" />
+            <div className="space-y-4 p-4">
+              <div className="skeleton-shimmer h-5 w-3/4 rounded-md" />
+              <div className="flex items-center justify-between gap-4 pt-1">
+                <div className="skeleton-shimmer h-3 w-2/3 rounded" />
+                <div className="skeleton-shimmer size-8 shrink-0 rounded-md" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function MovieRail({ id, title, movies, emptyText, className = "" }: { id: string; title: string; movies: Movie[]; emptyText: string; className?: string }) {

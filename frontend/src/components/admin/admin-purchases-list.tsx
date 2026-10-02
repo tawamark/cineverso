@@ -8,6 +8,7 @@ import { ApiError, getAdminPurchases, type AdminPurchase } from "@/lib/api";
 import { AdminEmptyState } from "./admin-empty-state";
 import { AdminSearch } from "./admin-search";
 import { AdminNoResults } from "./admin-no-results";
+import { AdminTableSkeleton } from "./admin-skeletons";
 
 type PurchasesState =
   | { status: "loading"; purchases: AdminPurchase[] }
@@ -55,7 +56,7 @@ export function AdminPurchasesList() {
   }, []);
 
   if (state.status === "loading") {
-    return null;
+    return <><AdminSearch placeholder="Buscar por código da compra ou filme" onSearch={setQuery} /><AdminTableSkeleton /></>;
   }
 
   if (state.status === "error") {

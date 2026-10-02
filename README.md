@@ -156,7 +156,7 @@ O schema Prisma e as migrations incluem cinemas, salas e assentos, filmes, sess�
 
 ## Aplicação online
 
-- Aplicação: [https://cineverso-topaz.vercel.app](https://cineverso-topaz.vercel.app)
+- Aplicação: [https://cineverso-topaz.vercel.app/](https://cineverso-topaz.vercel.app/)
 - API: [https://cineverso-api.onrender.com](https://cineverso-api.onrender.com)
 - Verificação da API: [https://cineverso-api.onrender.com/health](https://cineverso-api.onrender.com/health)
 

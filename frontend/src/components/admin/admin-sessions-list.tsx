@@ -8,6 +8,7 @@ import { AdminEmptyState } from "./admin-empty-state";
 import { AdminActionsMenu } from "./admin-actions-menu";
 import { AdminSearch } from "./admin-search";
 import { AdminNoResults } from "./admin-no-results";
+import { AdminTableSkeleton } from "./admin-skeletons";
 
 type SessionsState =
   | { status: "loading"; sessions: AdminSessionItem[] }
@@ -66,7 +67,7 @@ export function AdminSessionsList() {
   }
 
   if (state.status === "loading") {
-    return null;
+    return <><AdminSearch placeholder="Buscar por filme, sala ou cinema" onSearch={setQuery} /><AdminTableSkeleton columns={7} /></>;
   }
 
   if (state.status === "error") {

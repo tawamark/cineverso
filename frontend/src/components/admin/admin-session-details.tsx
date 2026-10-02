@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CircleAlert, Undo2 } from "lucide-react";
 import { clearAdminSession, getAdminSession } from "@/lib/admin-session";
 import { ApiError, getAdminSessionItem, type AdminSessionDetails as SessionDetails } from "@/lib/api";
+import { AdminDetailsSkeleton } from "./admin-skeletons";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
 const timeFormatter = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" });
@@ -28,10 +29,9 @@ export function AdminSessionDetails({ id }: { id: string }) {
     return Map.groupBy(session.sala.assentos, (seat) => seat.fileira);
   }, [session]);
 
-  if (!session && !error) return null;
-
   return <section>
     <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div><h1 className="text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Detalhes da sessão</h1>{error && <p className="mt-4 flex items-start gap-2 text-sm font-semibold text-accent"><CircleAlert className="mt-0.5 size-5 shrink-0" />{error}</p>}</div><Link href="/admin/sessoes" className="inline-flex h-11 shrink-0 items-center justify-center gap-2 self-start rounded-xl bg-foreground/[0.07] px-5 text-sm font-bold text-foreground/70 transition hover:bg-foreground/[0.12] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:self-center"><Undo2 className="size-4" />Voltar</Link></div>
+    {!session && !error && <AdminDetailsSkeleton withMap />}
     {session && <><div className="mt-8 overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(23,27,49,0.05)]">
       <div className="flex flex-col gap-4 bg-foreground/[0.035] px-6 py-6 sm:flex-row sm:items-start sm:justify-between"><div><h2 className="text-2xl font-bold">{session.filme.titulo}</h2><p className="mt-2 text-sm capitalize text-foreground/55">{dateFormatter.format(new Date(session.inicio))}</p></div><div className="flex flex-wrap gap-2"><span className="rounded-md bg-accent px-2.5 py-1 text-xs font-bold text-white">{session.formato}</span><span className="rounded-md bg-accent px-2.5 py-1 text-xs font-bold text-white">{session.versao === "DUBLADO" ? "Dub" : session.versao === "LEGENDADO" ? "Leg" : "Original"}</span><span className={`rounded-md px-2.5 py-1 text-xs font-bold ${session.publicada ? "bg-primary/10 text-primary" : "bg-muted/25 text-foreground/55"}`}>{session.publicada ? "Publicada" : "Não publicada"}</span></div></div>
       <dl className="grid sm:grid-cols-2 xl:grid-cols-4">

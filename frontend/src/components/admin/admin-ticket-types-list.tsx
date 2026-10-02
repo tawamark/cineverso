@@ -13,6 +13,7 @@ import { AdminEmptyState } from "./admin-empty-state";
 import { AdminActionsMenu } from "./admin-actions-menu";
 import { AdminSearch } from "./admin-search";
 import { AdminNoResults } from "./admin-no-results";
+import { AdminTableSkeleton } from "./admin-skeletons";
 
 type TicketTypesState =
   | { status: "loading"; ticketTypes: AdminTicketType[] }
@@ -71,7 +72,7 @@ export function AdminTicketTypesList() {
   }
 
   if (state.status === "loading") {
-    return null;
+    return <><AdminSearch placeholder="Buscar por nome do tipo de ingresso" onSearch={setQuery} /><AdminTableSkeleton /></>;
   }
 
   if (state.status === "error") {

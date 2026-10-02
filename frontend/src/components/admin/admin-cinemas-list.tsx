@@ -9,6 +9,7 @@ import { AdminActionsMenu } from "./admin-actions-menu";
 import { AdminEmptyState } from "./admin-empty-state";
 import { AdminSearch } from "./admin-search";
 import { AdminNoResults } from "./admin-no-results";
+import { AdminTableSkeleton } from "./admin-skeletons";
 
 export function AdminCinemasList() {
   const [items, setItems] = useState<AdminCinema[] | null>(null);
@@ -20,6 +21,7 @@ export function AdminCinemasList() {
   return <>
     <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div><h1 className="text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Cinemas</h1></div><Link href="/admin/cinemas/novo" className="flex h-11 items-center gap-2 self-start rounded-xl bg-primary px-5 text-sm font-bold text-white sm:self-center"><Plus className="size-4" />Cadastrar cinema</Link></div>
     <AdminSearch placeholder="Buscar por nome, cidade ou endereço" onSearch={setQuery} />
+    {!items && !error && <AdminTableSkeleton />}
     {error && <div className="mt-8 flex min-h-72 flex-col items-center justify-center rounded-2xl bg-white"><CircleAlert className="size-9 text-accent" /><h2 className="mt-5 text-xl font-bold">Não foi possível carregar os cinemas</h2></div>}
     {items?.length === 0 && <AdminEmptyState icon={Building2} title="Nenhum cinema cadastrado" description="Os cinemas adicionados aparecerão aqui." />}
     {items && items.length > 0 && visibleItems.length === 0 && <AdminNoResults />}

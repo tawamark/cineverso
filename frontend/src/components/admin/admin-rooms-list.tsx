@@ -8,6 +8,7 @@ import { AdminEmptyState } from "./admin-empty-state";
 import { AdminActionsMenu } from "./admin-actions-menu";
 import { AdminSearch } from "./admin-search";
 import { AdminNoResults } from "./admin-no-results";
+import { AdminTableSkeleton } from "./admin-skeletons";
 
 type RoomsState =
   | { status: "loading"; rooms: AdminRoom[] }
@@ -46,7 +47,7 @@ export function AdminRoomsList() {
   }
 
   if (state.status === "loading") {
-    return null;
+    return <><AdminSearch placeholder="Buscar por sala, cinema ou cidade" onSearch={setQuery} /><AdminTableSkeleton columns={6} /></>;
   }
 
   if (state.status === "error") {

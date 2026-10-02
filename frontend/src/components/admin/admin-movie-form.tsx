@@ -15,6 +15,7 @@ import {
 } from "@/lib/api";
 import { AdminSelect } from "./admin-select";
 import { AdminNumberInput } from "./admin-number-input";
+import { AdminFormSkeleton } from "./admin-skeletons";
 
 type AdminMovieFormProps = {
   movieId?: string;
@@ -190,6 +191,7 @@ export function AdminMovieForm({ movieId }: AdminMovieFormProps) {
         </Link>
       </div>
 
+      {loading && <AdminFormSkeleton />}
       {!loading && (
         <form noValidate onSubmit={handleSubmit} className="mt-8 space-y-6 rounded-2xl bg-white p-6 shadow-[0_8px_30px_rgba(23,27,49,0.05)] sm:p-8">
           <div className="grid gap-5 sm:grid-cols-[1fr_160px]">

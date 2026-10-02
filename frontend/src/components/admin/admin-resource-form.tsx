@@ -29,6 +29,7 @@ import {
 import { AdminSelect } from "./admin-select";
 import { AdminNumberInput } from "./admin-number-input";
 import { toast } from "@/lib/toast";
+import { AdminFormSkeleton } from "./admin-skeletons";
 
 type ResourceKind = "cinema" | "sala" | "sessao" | "tipo-ingresso";
 type Props = { kind: ResourceKind; id?: string };
@@ -201,6 +202,7 @@ export function AdminResourceForm({ kind, id }: Props) {
         </div>
         <Link href={config.back} className="inline-flex h-11 shrink-0 items-center justify-center gap-2 self-start rounded-xl bg-foreground/[0.07] px-5 text-sm font-bold text-foreground/70 transition hover:bg-foreground/[0.12] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:self-center"><Undo2 aria-hidden="true" className="size-4" />Voltar</Link>
       </div>
+      {loading && <AdminFormSkeleton />}
       {!loading && (
         <form noValidate onSubmit={submit} className="mt-8 space-y-6 rounded-2xl bg-white p-6 shadow-[0_8px_30px_rgba(23,27,49,0.05)] sm:p-8">
           {kind === "cinema" && <CinemaFields values={values} set={set} errors={fieldErrors} />}
