@@ -172,7 +172,7 @@ Esse acesso possui permissões administrativas completas e foi disponibilizado e
 
 ## Vídeo de apresentação
 
-O link do vídeo de apresentação será adicionado quando o projeto estiver finalizado.
+[https://youtu.be/_viEXw5IO_E]
 
 ## Sobre o trabalho
 
