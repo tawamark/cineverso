@@ -172,7 +172,7 @@ Esse acesso possui permissões administrativas completas e foi disponibilizado e
 
 ## Vídeo de apresentação
 
-[https://youtu.be/_viEXw5IO_E]
+https://youtu.be/_viEXw5IO_E
 
 ## Sobre o trabalho
 
